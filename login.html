@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Secure Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+<body class="flex justify-center items-center h-screen bg-red-100">
+
+    <!-- ✅ Login Card -->
+    <div class="bg-white p-8 rounded-xl shadow-lg w-96 relative border-t-4 border-red-500">
+        <h2 class="text-2xl font-bold text-center text-red-600">Admin Login</h2>
+
+        <!-- Input Fields -->
+        <div class="mt-6">
+            <input type="email" id="email" placeholder="Enter Email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+        <div class="mt-3">
+            <input type="password" id="password" placeholder="Enter Password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+
+        <!-- ✅ Error Message -->
+        <p id="errorMessage" class="text-red-500 text-sm mt-3 hidden transition-opacity duration-500 opacity-0">Invalid Credentials!</p>
+
+        <!-- ✅ Login Button with Loader -->
+        <button id="loginBtn" class="w-full bg-red-500 text-white py-2 rounded-lg mt-4 flex justify-center items-center">
+            <span id="loginText">Login</span>
+            <div id="loader" class="hidden ml-2 border-2 border-t-2 border-white rounded-full w-5 h-5 animate-spin"></div>
+        </button>
+    </div>
+
+    <!-- ✅ Firebase SDK Import -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { firebaseConfig } from "./firebase.js"; // ✅ Importing only config
+
+        // ✅ Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        // ✅ Static Admin UIDs
+        const adminUIDs = ["6u4xc3NmIeh1pUXckR79x0xdnka2", "UID_2"];
+
+        // ✅ Login Function with Loader
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("errorMessage");
+            const loginText = document.getElementById("loginText");
+            const loader = document.getElementById("loader");
+
+            try {
+                // ✅ Show Loader
+                loginText.textContent = "Logging in...";
+                loader.classList.remove("hidden");
+
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // ✅ Check if User is Admin
+                if (!adminUIDs.includes(user.uid)) {
+                    throw new Error("Access Denied! You are not an Admin.");
+                }
+
+                // ✅ Redirect to Admin Dashboard
+                window.location.href = "index.html";
+            } catch (error) {
+                // ✅ Show Error Message
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove("hidden");
+                errorMessage.classList.add("opacity-100");
+
+                // ✅ Hide Loader
+                loginText.textContent = "Login";
+                loader.classList.add("hidden");
+            }
+        });
+    </script>
+
+</body>
+</html>
