@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./img/logo.png">
   <title>Admin Panel - Orders</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
@@ -314,7 +315,7 @@ el.innerHTML = `
     <p style="font-size:14px;"><strong>Mobile:</strong> ${order.mobile}</p>
     <p style="font-size:14px;"><strong>Address:</strong> ${order.address}, ${order.city}, ${order.state}, ${order.pincode}</p>
     <p style="font-size:14px;"><strong>Order ID:</strong> ${orderId}</p>
-    <p style="font-size:14px;"><strong>Tracking ID:</strong> ${order.trackingId || "Not Available"}</p>
+    
     <hr style="border:1px solid #ddd; margin:10px 0;">
     <div style="background:#f8f9fa; padding:10px; border-radius:5px;">
       <p style="font-size:12px; color:#777;">Thank you for your order!</p>
@@ -373,7 +374,7 @@ currentEditingOrderId = orderId;
 
 const currentValue = document.getElementById(`trackingDisplay-${orderId}`)?.innerText;
 const input = document.getElementById('trackingModalInput');
-input.value = (currentValue && currentValue !== "Pending...!") ? currentValue : "";
+input.value = (currentValue && currentValue !== "Update...!") ? currentValue : "";
 
 document.getElementById('trackingModal').classList.remove('hidden');
 };
